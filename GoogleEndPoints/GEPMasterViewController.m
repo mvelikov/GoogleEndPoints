@@ -77,15 +77,18 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _objects.count;
+    return _filteredData.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    
+    NSDictionary *beerObject = [_filteredData objectAtIndex:indexPath.row];
+    
 
-    NSDate *object = _objects[indexPath.row];
-    cell.textLabel.text = [object description];
+//    NSDate *object = _objects[indexPath.row];
+    cell.textLabel.text = [beerObject objectForKey:@"beerName"];
     return cell;
 }
 
@@ -125,7 +128,7 @@
 {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = _objects[indexPath.row];
+        NSDate *object = _filteredData[indexPath.row];
         [[segue destinationViewController] setDetailItem:object];
     }
 }

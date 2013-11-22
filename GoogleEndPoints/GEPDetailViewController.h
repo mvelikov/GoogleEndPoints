@@ -12,5 +12,10 @@
 
 @property (strong, nonatomic) id detailItem;
 
-@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *score;
+@property (weak, nonatomic) IBOutlet UILabel *beerName;
+//@property (weak, nonatomic) IBOutlet UILabel *country;
+//@property (weak, nonatomic) IBOutlet UILabel *description;
+//@property (weak, nonatomic) IBOutlet UILabel *kingOfBeer;
+
 @end

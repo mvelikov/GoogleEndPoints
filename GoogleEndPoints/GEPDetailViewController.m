@@ -31,7 +31,12 @@
     // Update the user interface for the detail item.
 
     if (self.detailItem) {
-        self.detailDescriptionLabel.text = [self.detailItem description];
+//        self.score.text = [self.detailItem objectForKey:@"score"];
+        self.beerName.text = [self.detailItem objectForKey:@"beerName"];
+//        self.country.text = [self.detailItem objectForKey:@"country"];
+//        self.description.text = [self.detailItem objectForKey:@"description"];        
+//        self.kingOfBeer.text = [self.detailItem objectForKey:@"kingOfBeer"];
+        
     }
 }
 
