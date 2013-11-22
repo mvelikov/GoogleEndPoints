@@ -10,8 +10,8 @@
 
 @interface GEPMasterViewController : UITableViewController  <UITableViewDataSource>
 
-@property (strong, nonatomic) NSArray *rowData;
-@property (strong, nonatomic) NSArray *filteredData;
+@property (strong, nonatomic) NSArray *rawData;
+@property (strong, nonatomic) NSMutableArray *filteredData;
 
 
 @end

@@ -6,6 +6,10 @@
 //  Copyright (c) 2013 mihata. All rights reserved.
 //
 
+#define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) //1
+
+#define kBeersURL [NSURL URLWithString:@"https://demos-biira.appspot.com/_ah/api/birra/v1/beer?fields=items(beerName%2Ccountry%2Cdescription%2Cid%2CkindOfBeer%2Clatitude%2Clongitude%2CnumberOfDrinks%2Cscore)"]
+
 #import "GEPMasterViewController.h"
 
 #import "GEPDetailViewController.h"
@@ -25,11 +29,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _rawData = [[NSArray alloc] init];
+    _filteredData = [[NSMutableArray alloc] init];
+    
 	// Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    dispatch_async(kBgQueue, ^{
+        //        NSData* data = [NSData dataWithContentsOfURL:kLatestKivaLoansURL];
+        NSData* data = [NSData dataWithContentsOfURL:kBeersURL];
+        
+        //        jsonSummary.text = @"Wait...";
+        [self performSelectorOnMainThread:@selector(fetchedBeers:) withObject:data waitUntilDone:YES];
+        //        [self performSelectorOnMainThread:@selector(fetchedData:) withObject:data waitUntilDone:YES];
+    });
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
 }
 
 - (void)didReceiveMemoryWarning
@@ -38,15 +50,23 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)insertNewObject:(id)sender
-{
-    if (!_objects) {
-        _objects = [[NSMutableArray alloc] init];
+-(void)fetchedBeers : (NSData *)responseData {
+    NSError* error;
+    NSDictionary* json = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&error];
+    
+    
+    _rawData = [json objectForKey:@"items"];
+    
+    for (NSDictionary* beerObject in _rawData) {
+        NSString* beerName = [beerObject objectForKey:@"beerName"];
+        if (beerName != nil) {
+            [_filteredData addObject:beerObject];
+        }
     }
-    [_objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    [self.tableView reloadData];
 }
+
 
 #pragma mark - Table View
 
